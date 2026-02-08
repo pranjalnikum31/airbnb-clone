@@ -21,6 +21,7 @@ function Home() {
           component: <ListingCard {...item} />,
         }))}
       />
+      
     </>
   );
 }
