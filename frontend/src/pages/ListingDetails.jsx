@@ -2,6 +2,9 @@ import { useParams } from "react-router-dom";
 import { listings } from "../data/listings";
 import Navbar from "../components/Navbar";
 import { useState } from "react";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 export default function ListingDetails() {
   const { id } = useParams();
@@ -21,7 +24,17 @@ export default function ListingDetails() {
         )
       )
     : 0;
-  const totalPrice=nights*listing.price;      
+  const totalPrice=nights*listing.price;   
+  const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const handleReserve = () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+    else {alert("Reservation successful!"); // Placeholder for actual reservation logic
+    }
+  }
+   
   return (
     <>
       <Navbar />
@@ -93,7 +106,7 @@ export default function ListingDetails() {
               </div>
             </div>
 
-            <button className="mt-4 w-full bg-red-500 text-white py-3 rounded-lg font-semibold">
+            <button onClick={handleReserve} className="mt-4 w-full bg-red-500 text-white py-3 rounded-lg font-semibold">
               Reserve
             </button>
 
