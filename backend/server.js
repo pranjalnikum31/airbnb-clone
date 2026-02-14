@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
+import protect from "./middleware/authMiddleware.js";
 
 
 dotenv.config();
@@ -21,3 +22,6 @@ mongoose.connect(process.env.MONGO_URI).then(()=>{
     })
     
 }).catch(err=>console.log(err));
+app.get("/api/profile", protect, (req, res) => {
+    res.json({ user: req.user });
+});
