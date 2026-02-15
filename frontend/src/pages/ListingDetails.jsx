@@ -1,40 +1,86 @@
-import { useParams } from "react-router-dom";
-import { listings } from "../data/listings";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { useState } from "react";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import axios from "../api/axios";
 
 export default function ListingDetails() {
   const { id } = useParams();
-  const listing = listings.find((l) => l.id === Number(id));
 
+  // ✅ ALL HOOKS AT TOP
+  const [listing, setListing] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
 
-  if (!listing) return <p>Listing not found</p>;
- const nights =
-  checkIn && checkOut
-    ? Math.max(
-        0,
-        Math.round(
-          (new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24)
-        )
-      )
-    : 0;
-  const totalPrice=nights*listing.price;   
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
-  const handleReserve = () => {
+
+  // ✅ Fetch listing
+  useEffect(() => {
+    const fetchListing = async () => {
+      try {
+        const res = await axios.get(`/listings/${id}`);
+        setListing(res.data);
+      } catch (error) {
+        console.error("Error fetching listing");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchListing();
+  }, [id]);
+
+  // ✅ Loading state
+  if (loading) {
+    return <p className="text-center mt-10">Loading listing...</p>;
+  }
+  console.log("ID from URL:", id);
+
+  // ✅ Not found state
+  if (!listing) {
+    return <p className="text-center mt-10">Listing not found</p>;
+  }
+
+  // ✅ Nights calculation
+  const nights =
+    checkIn && checkOut
+      ? Math.max(
+          0,
+          Math.round(
+            (new Date(checkOut) - new Date(checkIn)) /
+              (1000 * 60 * 60 * 24)
+          )
+        )
+      : 0;
+
+  const totalPrice = nights * listing.price;
+
+  const handleReserve = async () => {
     if (!isAuthenticated) {
       navigate("/login");
+      return;
     }
-    else {alert("Reservation successful!"); // Placeholder for actual reservation logic
+    if (!checkIn || !checkOut) {
+      alert("Please select check-in and check-out dates");
+      return;
     }
-  }
-   
+    try {
+      await axios.post("/bookings", {
+        listingId: listing._id,
+        checkIn,
+        checkOut,
+        guests
+      });
+      alert("Booking successful!");
+      navigate("/my-bookings");
+    } catch (error) {
+       alert(error.response?.data?.message || "Booking failed");
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -49,26 +95,26 @@ export default function ListingDetails() {
               key={i}
               src={img}
               className="h-[250px] w-full object-cover rounded-xl"
+              alt=""
             />
           ))}
         </div>
 
-         {/* Content */}
         <div className="mt-10 flex gap-10">
           {/* Left side */}
           <div className="flex-1">
             <p className="text-lg font-medium mb-2">About this place</p>
             <p className="text-gray-600">
-              A beautiful stay located in {listing.location}. Perfect for a
-              comfortable and relaxing experience.
+              A beautiful stay located in {listing.location}.
+              Perfect for a comfortable and relaxing experience.
             </p>
           </div>
 
           {/* Right side — Booking Box */}
           <div className="w-[350px] border rounded-xl p-6 shadow-lg h-fit">
             <p className="text-xl font-semibold mb-4">
-              ₹{listing.price}{" "}
-              <span className="text-sm font-normal">night</span>
+              ₹{listing.price}
+              <span className="text-sm font-normal"> / night</span>
             </p>
 
             <div className="border rounded-lg overflow-hidden">
@@ -106,7 +152,10 @@ export default function ListingDetails() {
               </div>
             </div>
 
-            <button onClick={handleReserve} className="mt-4 w-full bg-red-500 text-white py-3 rounded-lg font-semibold">
+            <button
+              onClick={handleReserve}
+              className="mt-4 w-full bg-red-500 text-white py-3 rounded-lg font-semibold"
+            >
               Reserve
             </button>
 

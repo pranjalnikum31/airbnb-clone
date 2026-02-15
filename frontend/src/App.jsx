@@ -3,6 +3,7 @@ import Home from "./pages/Home"
 import ListingDetails from "./pages/ListingDetails";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import MyBookings from "./pages/MyBookings";
 function App() {
 
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute>
             <p>Profile Page - Only visible to authenticated users</p>
           </ProtectedRoute>}></Route>
+          <Route path="/my-bookings" element={<ProtectedRoute><MyBookings/></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </>

@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Searchbar from "../components/Searchbar";
 import ListingCard from "../components/ListingCard";
-import { listings } from "../data/listings";
 import Section from "../components/Section";
+import axios from "../api/Axios";
 function Home() {
+  const [listings,setListings]=useState([])
+  const [loading,setLoading]=useState(true)
+  useEffect(()=>{
+    const fetchListings=async()=>{
+      try {
+        const res =await axios.get("/listings");
+        setListings(res.data);
+      } catch (error) {
+        console.error("Error fetching listings");
+      }
+      finally{
+        setLoading(false);
+      }
+    };
+    fetchListings();
+  },[])
+  if (loading) {
+    return <p className="text-center mt-10">Loading listings...</p>;
+  }
   return (
     <>
       <Navbar />
@@ -17,8 +36,8 @@ function Home() {
       <Section
         title="Popular homes"
         items={listings.map((item) => ({
-          id: item.id,
-          component: <ListingCard {...item} />,
+          id: item._id,
+          component: <ListingCard id={item._id} {...item} />,
         }))}
       />
       

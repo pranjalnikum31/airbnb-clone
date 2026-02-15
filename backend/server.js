@@ -4,6 +4,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import protect from "./middleware/authMiddleware.js";
+import listingRoutes from "./routes/listingRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 
 
 dotenv.config();
@@ -25,3 +27,5 @@ mongoose.connect(process.env.MONGO_URI).then(()=>{
 app.get("/api/profile", protect, (req, res) => {
     res.json({ user: req.user });
 });
+app.use("/api/listings",listingRoutes)
+app.use("/api/bookings", bookingRoutes);
