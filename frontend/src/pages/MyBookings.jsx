@@ -23,6 +23,14 @@ function MyBookings() {
   if (loading) {
     return <p className="text-center mt-10">Loading bookings...</p>;
   }
+  const handleCancel = async (id) => {
+    try {
+      await axios.delete(`/bookings/${id}`);
+      setBookings(bookings.filter((b) => b._id !== id));
+    } catch (error) {
+      alert("Failed to cancel booking");
+    }
+  };
   return (
     <>
       <Navbar />
@@ -54,9 +62,13 @@ function MyBookings() {
                     {new Date(booking.checkOut).toLocaleDateString()}
                   </p>
 
-                  <p className="mt-2 font-semibold">
-                    ₹{booking.totalPrice}
-                  </p>
+                  <p className="mt-2 font-semibold">₹{booking.totalPrice}</p>
+                  <button
+                    onClick={() => handleCancel(booking._id)}
+                    className="mt-2 text-red-500 text-sm cursor-pointer"
+                  >
+                    Cancel Booking
+                  </button>
                 </div>
               </div>
             ))}

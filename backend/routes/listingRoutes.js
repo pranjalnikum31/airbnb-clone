@@ -1,10 +1,11 @@
 import express from "express";
 import Listings from "../models/ListingSchema.js";
 import protect from "../middleware/authMiddleware.js";
+import authorizeRoles from "../middleware/roleMiddleware.js";
 
 const router =express.Router();
 
-router.post("/",protect,async (req,res) => {
+router.post("/",protect,authorizeRoles("host"),async (req,res) => {
     try {
         const listing=new Listings({
             ...req.body,
