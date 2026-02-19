@@ -27,6 +27,17 @@ router.get("/",async (req,res) => {
     }
 })
 
+router.get("/my", protect, authorizeRoles("host"), async (req, res) => {
+  try {
+    const listings = await Listings.find({ host: req.user._id });
+    res.json(listings);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
 router.get("/:id", async (req, res) => {
   try {
     const listing = await Listings.findById(req.params.id).populate("host", "name email");
@@ -40,4 +51,6 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
 export default router;

@@ -24,7 +24,8 @@ const listingSchema = new mongoose.Schema({
     ],
     host: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
+      required:true
     }
   },{timestamps:true})
 

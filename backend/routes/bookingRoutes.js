@@ -2,6 +2,8 @@ import express from "express";
 import Booking from "../models/BookingSchema.js";
 import Listing from "../models/ListingSchema.js";
 import protect from "../middleware/authMiddleware.js";
+import authorizeRoles from "../middleware/roleMiddleware.js";
+
 
 const router = express.Router();
 
@@ -68,5 +70,23 @@ router.delete("/:id",protect,async (req,res) => {
     res.status(500).json({ message: "Server error" });
   }
 })
+
+router.get("/host", protect, authorizeRoles("host"), async (req, res) => {
+  try {
+    const bookings = await Booking.find()
+      .populate("listing")
+      .populate("user");
+
+    const hostBookings = bookings.filter(
+      (booking) =>
+        booking.listing.host.toString() === req.user._id.toString()
+    );
+
+    res.json(hostBookings);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 export default router;
