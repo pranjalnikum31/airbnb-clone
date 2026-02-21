@@ -13,6 +13,9 @@ export default function ListingDetails() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(1);
+  const [reviews, setReviews] = useState([]);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
 
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -23,6 +26,8 @@ export default function ListingDetails() {
       try {
         const res = await axios.get(`/listings/${id}`);
         setListing(res.data);
+        const reviewsRes = await axios.get(`/reviews/${id}`);
+        setReviews(reviewsRes.data);
       } catch (error) {
         console.error("Error fetching listing");
       } finally {
@@ -50,9 +55,8 @@ export default function ListingDetails() {
       ? Math.max(
           0,
           Math.round(
-            (new Date(checkOut) - new Date(checkIn)) /
-              (1000 * 60 * 60 * 24)
-          )
+            (new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24),
+          ),
         )
       : 0;
 
@@ -72,12 +76,26 @@ export default function ListingDetails() {
         listingId: listing._id,
         checkIn,
         checkOut,
-        guests
+        guests,
       });
       alert("Booking successful!");
       navigate("/my-bookings");
     } catch (error) {
-       alert(error.response?.data?.message || "Booking failed");
+      alert(error.response?.data?.message || "Booking failed");
+    }
+  };
+  const handleReviewSubmit = async () => {
+    try {
+      await axios.post("/reviews", {
+        listingId: id,
+        rating,
+        comment,
+      });
+
+      alert("Review added!");
+      window.location.reload();
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to submit review");
     }
   };
 
@@ -105,8 +123,8 @@ export default function ListingDetails() {
           <div className="flex-1">
             <p className="text-lg font-medium mb-2">About this place</p>
             <p className="text-gray-600">
-              A beautiful stay located in {listing.location}.
-              Perfect for a comfortable and relaxing experience.
+              A beautiful stay located in {listing.location}. Perfect for a
+              comfortable and relaxing experience.
             </p>
           </div>
 
@@ -176,6 +194,45 @@ export default function ListingDetails() {
             )}
           </div>
         </div>
+        <div className="mt-10">
+          <h2 className="text-xl font-semibold mb-4">Reviews</h2>
+
+          {reviews.length === 0 ? (
+            <p>No reviews yet.</p>
+          ) : (
+            reviews.map((review) => (
+              <div key={review._id} className="border-b py-4">
+                <p className="font-semibold">{review.user.name}</p>
+                <p>⭐ {review.rating}</p>
+                <p className="text-gray-600">{review.comment}</p>
+              </div>
+            ))
+          )}
+        </div>
+        {isAuthenticated && (
+          <div className="mt-6">
+            <h3 className="font-semibold mb-2">Leave a Review</h3>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="w-full border p-2 rounded mb-2"
+            />
+            <input
+              type="number"
+              min="1"
+              max="5"
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
+              className="border p-2 rounded mb-2"
+            />
+            <button
+              onClick={handleReviewSubmit}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Submit Review
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

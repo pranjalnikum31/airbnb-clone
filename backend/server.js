@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import protect from "./middleware/authMiddleware.js";
 import listingRoutes from "./routes/listingRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 
 dotenv.config();
@@ -29,3 +30,4 @@ app.get("/api/profile", protect, (req, res) => {
 });
 app.use("/api/listings",listingRoutes)
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/reviews", reviewRoutes);
