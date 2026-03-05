@@ -2,30 +2,57 @@ import express from "express";
 import Listings from "../models/ListingSchema.js";
 import protect from "../middleware/authMiddleware.js";
 import authorizeRoles from "../middleware/roleMiddleware.js";
+import upload from "../middleware/uploadMiddleware.js";
+import cloudinary from "../config/cloudinary.js";
 
-const router =express.Router();
+const router = express.Router();
 
-router.post("/",protect,authorizeRoles("host"),async (req,res) => {
+router.post(
+  "/",
+  protect,
+  authorizeRoles("host"),
+  upload.array("images"),
+  async (req, res) => {
     try {
-        const listing=new Listings({
-            ...req.body,
-            host:req.user._id
+      const imageUrls = [];
+
+      for (const file of req.files) {
+        const result = await new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "airbnb-clone" },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            },
+          );
+
+          stream.end(file.buffer);
         });
-        await listing.save();
-        res.status(201).json(listing)
-    } catch (error) {
-         res.status(500).json({ message: "Server error" });
-    }
-})
 
-router.get("/",async (req,res) => {
-    try {
-        const listings=await Listings.find().populate("host","name email")
-        res.json(listings)
+        imageUrls.push(result.secure_url);
+      }
+      const listing = new Listings({
+        ...req.body,
+        images:imageUrls,
+        host: req.user._id,
+      });
+      await listing.save();
+      res.status(201).json(listing);
     } catch (error) {
-            res.status(500).json({ message: "Server error" });
+      console.error(error);
+      res.status(500).json({ message: error.message });
     }
-})
+  },
+);
+
+router.get("/", async (req, res) => {
+  try {
+    const listings = await Listings.find().populate("host", "name email");
+    res.json(listings);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 router.get("/my", protect, authorizeRoles("host"), async (req, res) => {
   try {
@@ -36,11 +63,12 @@ router.get("/my", protect, authorizeRoles("host"), async (req, res) => {
   }
 });
 
-
-
 router.get("/:id", async (req, res) => {
   try {
-    const listing = await Listings.findById(req.params.id).populate("host", "name email");
+    const listing = await Listings.findById(req.params.id).populate(
+      "host",
+      "name email",
+    );
 
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
@@ -51,6 +79,5 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 export default router;

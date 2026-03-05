@@ -2,6 +2,7 @@ import express from "express";
 import Review from "../models/ReviewSchema.js";
 import Booking from "../models/BookingSchema.js";
 import protect from "../middleware/authMiddleware.js";
+import Listing from "../models/ListingSchema.js";
 
 const router = express.Router();
 
@@ -41,6 +42,12 @@ router.post("/", protect, async (req, res) => {
     });
 
     await review.save();
+
+    const reviews=await Review.find({listing:listingId});
+    const avgRating=reviews.reduce((acc,item)=>acc+item.rating,0)/reviews.length;
+    await Listing.findByIdAndUpdate(listingId, {
+      rating: avgRating
+    });
 
     res.status(201).json(review);
   } catch (error) {
