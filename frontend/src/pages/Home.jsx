@@ -7,10 +7,11 @@ import axios from "../api/Axios";
 function Home() {
   const [listings,setListings]=useState([])
   const [loading,setLoading]=useState(true)
+  const [search, setSearch] = useState("");
   useEffect(()=>{
     const fetchListings=async()=>{
       try {
-        const res =await axios.get("/listings");
+        const res =await axios.get(`/listings?location=${search}`);
         setListings(res.data);
       } catch (error) {
         console.error("Error fetching listings");
@@ -20,14 +21,14 @@ function Home() {
       }
     };
     fetchListings();
-  },[])
+  },[search])
   if (loading) {
     return <p className="text-center mt-10">Loading listings...</p>;
   }
   return (
     <>
       <Navbar />
-      <Searchbar />
+      <Searchbar setSearch={setSearch} />
       {/* <div className="px-10 mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {listings.map((item) => (
           <ListingCard key={item.id} {...item} />

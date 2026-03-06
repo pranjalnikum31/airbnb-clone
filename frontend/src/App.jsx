@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MyBookings from "./pages/MyBookings";
 import HostDashboard from "./pages/HostDashboard";
+import AddListing from "./pages/AddListing";
 function App() {
 
   return (
@@ -19,6 +20,7 @@ function App() {
           </ProtectedRoute>}></Route>
           <Route path="/my-bookings" element={<ProtectedRoute><MyBookings/></ProtectedRoute>} />
           <Route path="/host-dashboard" element={<ProtectedRoute><HostDashboard/></ProtectedRoute>}/>
+          <Route path="/add-listing" element={<ProtectedRoute><AddListing/></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>
     </>

@@ -47,7 +47,12 @@ router.post(
 
 router.get("/", async (req, res) => {
   try {
-    const listings = await Listings.find().populate("host", "name email");
+    const{location}=req.query
+    let query={};
+    if(location){
+      query.location={$regex:location,$options:"i"}
+    }
+    const listings = await Listings.find(query).populate("host", "name email");
     res.json(listings);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
