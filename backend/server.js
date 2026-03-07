@@ -11,6 +11,7 @@ import reviewRoutes from "./routes/reviewRoutes.js";
 
 dotenv.config();
 const app=express();
+const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: "*",
   credentials: true
@@ -24,8 +25,8 @@ app.get("/",(req,res)=>{
 app.use("/api/auth",authRoutes);
 mongoose.connect(process.env.MONGO_URI).then(()=>{
     console.log("mongodb connected");
-    app.listen(5000,()=>{
-        console.log("Server running on port 5000");
+    app.listen(PORT,()=>{
+        console.log(`Server running on port ${PORT}`);
     })
     
 }).catch(err=>console.log(err));
