@@ -1,3 +1,14 @@
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+
+import authRoutes from "./routes/authRoutes.js";
+import protect from "./middleware/authMiddleware.js";
+import listingRoutes from "./routes/listingRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
+
 dotenv.config();
 
 const app = express();
