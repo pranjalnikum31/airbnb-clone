@@ -20,9 +20,11 @@ function MyBookings() {
     };
     fetchBookings();
   }, []);
+
   if (loading) {
-    return <p className="text-center mt-10">Loading bookings...</p>;
+    return <p className="text-center mt-16">Loading bookings...</p>;
   }
+
   const handleCancel = async (id) => {
     try {
       await axios.delete(`/bookings/${id}`);
@@ -31,11 +33,13 @@ function MyBookings() {
       alert("Failed to cancel booking");
     }
   };
+
   return (
     <>
       <Navbar />
-      <div className="px-10 py-8 max-w-6xl mx-auto">
-        <h1 className="text-2xl font-semibold mb-6">My Bookings</h1>
+
+      <div className="px-4 md:px-10 py-8 max-w-6xl mx-auto">
+        <h1 className="text-xl md:text-2xl font-semibold mb-6">My Bookings</h1>
 
         {bookings.length === 0 ? (
           <p>No bookings yet.</p>
@@ -44,16 +48,16 @@ function MyBookings() {
             {bookings.map((booking) => (
               <div
                 key={booking._id}
-                className="border rounded-xl p-6 flex gap-6 shadow"
+                className="border rounded-xl p-4 md:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 shadow"
               >
                 <img
                   src={booking.listing?.images?.[0]}
                   alt=""
-                  className="w-40 h-28 object-cover rounded-lg"
+                  className="w-full sm:w-40 h-40 sm:h-28 object-cover rounded-lg"
                 />
 
                 <div>
-                  <h2 className="font-semibold text-lg">
+                  <h2 className="font-semibold text-base md:text-lg">
                     {booking.listing?.title || "listing removed"}
                   </h2>
 
@@ -63,6 +67,7 @@ function MyBookings() {
                   </p>
 
                   <p className="mt-2 font-semibold">₹{booking.totalPrice}</p>
+
                   <button
                     onClick={() => handleCancel(booking._id)}
                     className="mt-2 text-red-500 text-sm cursor-pointer"

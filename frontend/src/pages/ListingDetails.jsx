@@ -7,7 +7,6 @@ import axios from "../api/axios";
 export default function ListingDetails() {
   const { id } = useParams();
 
-  // ✅ ALL HOOKS AT TOP
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [checkIn, setCheckIn] = useState("");
@@ -20,12 +19,12 @@ export default function ListingDetails() {
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // ✅ Fetch listing
   useEffect(() => {
     const fetchListing = async () => {
       try {
         const res = await axios.get(`/listings/${id}`);
         setListing(res.data);
+
         const reviewsRes = await axios.get(`/reviews/${id}`);
         setReviews(reviewsRes.data);
       } catch (error) {
@@ -38,18 +37,14 @@ export default function ListingDetails() {
     fetchListing();
   }, [id]);
 
-  // ✅ Loading state
   if (loading) {
     return <p className="text-center mt-10">Loading listing...</p>;
   }
-  console.log("ID from URL:", id);
 
-  // ✅ Not found state
   if (!listing) {
     return <p className="text-center mt-10">Listing not found</p>;
   }
 
-  // ✅ Nights calculation
   const nights =
     checkIn && checkOut
       ? Math.max(
@@ -67,10 +62,12 @@ export default function ListingDetails() {
       navigate("/login");
       return;
     }
+
     if (!checkIn || !checkOut) {
       alert("Please select check-in and check-out dates");
       return;
     }
+
     try {
       await axios.post("/bookings", {
         listingId: listing._id,
@@ -78,12 +75,14 @@ export default function ListingDetails() {
         checkOut,
         guests,
       });
+
       alert("Booking successful!");
       navigate("/my-bookings");
     } catch (error) {
       alert(error.response?.data?.message || "Booking failed");
     }
   };
+
   const handleReviewSubmit = async () => {
     try {
       await axios.post("/reviews", {
@@ -103,23 +102,24 @@ export default function ListingDetails() {
     <>
       <Navbar />
 
-      <div className="px-10 py-8 max-w-6xl mx-auto">
-        <h1 className="text-2xl font-semibold">{listing.title}</h1>
+      <div className="px-4 md:px-10 py-8 max-w-6xl mx-auto">
+
+        <h1 className="text-xl md:text-2xl font-semibold">{listing.title}</h1>
         <p className="text-gray-600">{listing.location}</p>
 
-        <div className="grid grid-cols-2 gap-4 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
           {listing.images.map((img, i) => (
             <img
               key={i}
               src={img}
-              className="h-[250px] w-full object-cover rounded-xl"
+              className="h-[220px] md:h-[250px] w-full object-cover rounded-xl"
               alt=""
             />
           ))}
         </div>
 
-        <div className="mt-10 flex gap-10">
-          {/* Left side */}
+        <div className="mt-10 flex flex-col lg:flex-row gap-10">
+
           <div className="flex-1">
             <p className="text-lg font-medium mb-2">About this place</p>
             <p className="text-gray-600">
@@ -128,8 +128,7 @@ export default function ListingDetails() {
             </p>
           </div>
 
-          {/* Right side — Booking Box */}
-          <div className="w-[350px] border rounded-xl p-6 shadow-lg h-fit">
+          <div className="w-full lg:w-[350px] border rounded-xl p-6 shadow-lg h-fit">
             <p className="text-xl font-semibold mb-4">
               ₹{listing.price}
               <span className="text-sm font-normal"> / night</span>
@@ -193,9 +192,11 @@ export default function ListingDetails() {
               </div>
             )}
           </div>
+
         </div>
+
         <div className="mt-10">
-          <h2 className="text-xl font-semibold mb-4">Reviews</h2>
+          <h2 className="text-lg md:text-xl font-semibold mb-4">Reviews</h2>
 
           {reviews.length === 0 ? (
             <p>No reviews yet.</p>
@@ -209,14 +210,17 @@ export default function ListingDetails() {
             ))
           )}
         </div>
+
         {isAuthenticated && (
           <div className="mt-6">
             <h3 className="font-semibold mb-2">Leave a Review</h3>
+
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               className="w-full border p-2 rounded mb-2"
             />
+
             <input
               type="number"
               min="1"
@@ -225,6 +229,7 @@ export default function ListingDetails() {
               onChange={(e) => setRating(e.target.value)}
               className="border p-2 rounded mb-2"
             />
+
             <button
               onClick={handleReviewSubmit}
               className="bg-red-500 text-white px-4 py-2 rounded"
@@ -233,6 +238,7 @@ export default function ListingDetails() {
             </button>
           </div>
         )}
+
       </div>
     </>
   );

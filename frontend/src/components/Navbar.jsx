@@ -10,16 +10,16 @@ function Navbar() {
   const navigate = useNavigate();
 
   return (
-    <nav className="flex items-center justify-between px-10 py-4 border-b">
+    <nav className="flex flex-wrap items-center justify-between px-4 md:px-10 py-4 border-b">
 
       <div
-        className="text-red-500 text-2xl font-bold cursor-pointer"
+        className="text-red-500 text-xl md:text-2xl font-bold cursor-pointer"
         onClick={() => navigate("/")}
       >
         airbnb
       </div>
 
-      <div className="flex gap-8 text-sm font-medium">
+      <div className="flex flex-wrap gap-4 md:gap-8 text-sm font-medium mt-3 md:mt-0">
 
         <span
           className="cursor-pointer border-b-2 border-black pb-2"
@@ -57,18 +57,18 @@ function Navbar() {
 
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 md:gap-4 mt-3 md:mt-0">
 
         {!isAuthenticated ? (
           <button
             onClick={() => navigate("/login")}
-            className="px-4 py-2 text-sm border rounded-lg"
+            className="px-3 md:px-4 py-2 text-sm border rounded-lg"
           >
             Login
           </button>
         ) : (
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium">
+          <div className="flex items-center gap-2 md:gap-3">
+            <span className="text-sm font-medium hidden sm:block">
               Hello, {user.name}
             </span>
 
@@ -81,7 +81,7 @@ function Navbar() {
           </div>
         )}
 
-        <div className="w-9 h-9 rounded-full flex items-center justify-center bg-[#f2f2f2]">
+        <div className="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center bg-[#f2f2f2]">
           <FeatherIcon icon="globe" size={16} />
         </div>
 

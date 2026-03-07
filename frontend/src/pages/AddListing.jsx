@@ -42,15 +42,17 @@ export default function AddListing() {
     <>
       <Navbar />
 
-      <div className="max-w-xl mx-auto mt-10">
-        <h1 className="text-2xl font-semibold mb-6">Add New Listing</h1>
+      <div className="max-w-xl mx-auto mt-10 px-4 md:px-0">
+        <h1 className="text-xl md:text-2xl font-semibold mb-6">
+          Add New Listing
+        </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
           <input
             type="text"
             placeholder="Title"
-            className="border p-3 rounded"
+            className="border p-3 rounded w-full"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -59,7 +61,7 @@ export default function AddListing() {
           <input
             type="text"
             placeholder="Location"
-            className="border p-3 rounded"
+            className="border p-3 rounded w-full"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             required
@@ -68,7 +70,7 @@ export default function AddListing() {
           <input
             type="number"
             placeholder="Price"
-            className="border p-3 rounded"
+            className="border p-3 rounded w-full"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
@@ -78,10 +80,11 @@ export default function AddListing() {
             type="file"
             multiple
             onChange={handleImageChange}
+            className="w-full"
           />
 
           {/* Image Preview */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {preview.map((img, i) => (
               <img
                 key={i}
@@ -93,7 +96,7 @@ export default function AddListing() {
 
           <button
             type="submit"
-            className="bg-red-500 text-white py-3 rounded font-semibold"
+            className="bg-red-500 text-white py-3 rounded font-semibold w-full"
           >
             Create Listing
           </button>

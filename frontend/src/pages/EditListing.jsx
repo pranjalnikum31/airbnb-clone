@@ -51,8 +51,10 @@ export default function EditListing() {
     <>
       <Navbar />
 
-      <div className="max-w-xl mx-auto mt-10">
-        <h2 className="text-2xl font-semibold mb-6">Edit Listing</h2>
+      <div className="max-w-xl mx-auto mt-10 px-4 md:px-0">
+        <h2 className="text-xl md:text-2xl font-semibold mb-6">
+          Edit Listing
+        </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
@@ -61,7 +63,7 @@ export default function EditListing() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title"
-            className="border p-2 rounded"
+            className="border p-2 rounded w-full"
           />
 
           <input
@@ -69,7 +71,7 @@ export default function EditListing() {
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="Location"
-            className="border p-2 rounded"
+            className="border p-2 rounded w-full"
           />
 
           <input
@@ -77,12 +79,12 @@ export default function EditListing() {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             placeholder="Price"
-            className="border p-2 rounded"
+            className="border p-2 rounded w-full"
           />
 
           <button
             type="submit"
-            className="bg-red-500 text-white py-2 rounded"
+            className="bg-red-500 text-white py-2 rounded w-full"
           >
             Update Listing
           </button>

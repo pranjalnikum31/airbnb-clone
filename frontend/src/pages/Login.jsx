@@ -9,35 +9,35 @@ function Login() {
   const [password, setPassword] = useState("");
   const { login, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
+
   if (isAuthenticated) {
     return <Navigate to="/" />;
   }
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res= await axios.post("/auth/login",{ email, password });
-      
-      login(res.data.user,res.data.token);
+      const res = await axios.post("/auth/login", { email, password });
+
+      login(res.data.user, res.data.token);
       navigate("/");
     } catch (error) {
-      alert(
-        error.response?.data?.message || "Login failed"
-      );
-      
-      
+      alert(error.response?.data?.message || "Login failed");
     }
   };
+
   return (
     <>
       <Navbar />
 
-      <div className="flex justify-center items-center h-[80vh]">
+      <div className="flex justify-center items-center min-h-[80vh] px-4">
         <form
           onSubmit={handleSubmit}
-          className="w-[400px] border p-8 rounded-xl shadow-lg"
+          className="w-full max-w-[400px] border p-6 md:p-8 rounded-xl shadow-lg"
         >
-          <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
+          <h2 className="text-xl md:text-2xl font-semibold mb-6 text-center">
+            Login
+          </h2>
 
           <div className="mb-4">
             <label className="block text-sm mb-1">Email</label>
