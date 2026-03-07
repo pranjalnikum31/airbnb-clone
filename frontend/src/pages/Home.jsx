@@ -10,6 +10,7 @@ function Home() {
   const [search, setSearch] = useState("");
   useEffect(()=>{
     const fetchListings=async()=>{
+      
       try {
         const res =await axios.get(`/listings?location=${search}`);
         setListings(res.data);
