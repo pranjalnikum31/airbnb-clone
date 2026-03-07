@@ -6,7 +6,7 @@ function ProtectedRoute({ children }) {
   const { isAuthenticated,loading } = useContext(AuthContext);
   console.log("ProtectedRoute isAuthenticated:", isAuthenticated);
   if (loading) {
-    return null; // or loading spinner
+    return <p className="text-center mt-10">Loading...</p>
   }
 
   if (!isAuthenticated) {

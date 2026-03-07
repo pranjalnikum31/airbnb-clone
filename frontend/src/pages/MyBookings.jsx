@@ -47,14 +47,14 @@ function MyBookings() {
                 className="border rounded-xl p-6 flex gap-6 shadow"
               >
                 <img
-                  src={booking.listing.images[0]}
+                  src={booking.listing?.images?.[0]}
                   alt=""
                   className="w-40 h-28 object-cover rounded-lg"
                 />
 
                 <div>
                   <h2 className="font-semibold text-lg">
-                    {booking.listing.title}
+                    {booking.listing?.title || "listing removed"}
                   </h2>
 
                   <p className="text-gray-600">

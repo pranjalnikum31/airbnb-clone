@@ -4,6 +4,7 @@ import protect from "../middleware/authMiddleware.js";
 import authorizeRoles from "../middleware/roleMiddleware.js";
 import upload from "../middleware/uploadMiddleware.js";
 import cloudinary from "../config/cloudinary.js";
+import Booking from "../models/BookingSchema.js";
 
 const router = express.Router();
 
@@ -80,6 +81,53 @@ router.get("/:id", async (req, res) => {
     }
 
     res.json(listing);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.delete("/:id", protect, authorizeRoles("host"), async (req, res) => {
+  try {
+    const listing = await Listings.findById(req.params.id);
+
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    if (listing.host.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized to delete this listing" });
+    }
+
+    await listing.deleteOne();
+    await Booking.deleteMany({ listing: req.params.id });
+
+    res.json({ message: "Listing deleted successfully" });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.put("/:id", protect, authorizeRoles("host"), async (req, res) => {
+  try {
+    const listing = await Listings.findById(req.params.id);
+
+    if (!listing) {
+      return res.status(404).json({ message: "Listing not found" });
+    }
+
+    if (listing.host.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const updatedListing = await Listings.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    res.json(updatedListing);
+
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MyBookings from "./pages/MyBookings";
 import HostDashboard from "./pages/HostDashboard";
 import AddListing from "./pages/AddListing";
+import EditListing from "./pages/EditListing";
 function App() {
 
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/my-bookings" element={<ProtectedRoute><MyBookings/></ProtectedRoute>} />
           <Route path="/host-dashboard" element={<ProtectedRoute><HostDashboard/></ProtectedRoute>}/>
           <Route path="/add-listing" element={<ProtectedRoute><AddListing/></ProtectedRoute>}/>
+          <Route path="/edit-listing/:id" element={<ProtectedRoute><EditListing/></ProtectedRoute>}/>
         </Routes>
       </BrowserRouter>
     </>

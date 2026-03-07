@@ -11,7 +11,10 @@ import reviewRoutes from "./routes/reviewRoutes.js";
 
 dotenv.config();
 const app=express();
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  credentials: true
+}));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.get("/",(req,res)=>{

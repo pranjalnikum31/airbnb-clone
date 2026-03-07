@@ -79,6 +79,7 @@ router.get("/host", protect, authorizeRoles("host"), async (req, res) => {
 
     const hostBookings = bookings.filter(
       (booking) =>
+        booking.listing &&
         booking.listing.host.toString() === req.user._id.toString()
     );
 
