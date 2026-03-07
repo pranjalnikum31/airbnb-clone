@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: "*",
+  origin: "https://airbnb-clone-self-one.vercel.app/",
   credentials: true
 }));
 

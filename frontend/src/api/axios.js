@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance=axios.create({
-    baseURL:"https://airbnb-clone-zg5d.onrender.com"
+    baseURL:"https://airbnb-clone-zg5d.onrender.com/api"
 })
 
 instance.interceptors.request.use((config)=>{
