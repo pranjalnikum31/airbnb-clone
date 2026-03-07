@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Searchbar from "../components/Searchbar";
 import ListingCard from "../components/ListingCard";
 import Section from "../components/Section";
-import axios from "../api/Axios";
+import axios from "../api/axios";
 function Home() {
   const [listings,setListings]=useState([])
   const [loading,setLoading]=useState(true)
